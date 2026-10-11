@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>C Terminal privacy</title>
+<meta name="description" content="Exactly where C Terminal keeps your data. No servers, no accounts.">
+<meta name="color-scheme" content="dark">
+<link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon-48.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<style>
+@font-face{font-family:Montserrat;src:url(/assets/montserrat.woff2) format("woff2");font-weight:100 900;font-display:swap}
+:root{--accent:#5CFDED;--bg:#000001;--card:#0C1416;--line:#1B2A2D;--text:#D5DEDF;--muted:#8FA2A5;--ink:#F2F6F8}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:1.7;-webkit-font-smoothing:antialiased}
+.wrap{max-width:760px;margin:0 auto;padding:0 20px}
+nav{border-bottom:1px solid var(--line)} nav .wrap{display:flex;align-items:center;justify-content:space-between;height:62px}
+.brand{font-family:Montserrat,sans-serif;font-weight:800;font-size:1.15rem;color:var(--ink);text-decoration:none;display:flex;gap:9px;align-items:center}
+.brand img{height:30px;width:30px;border-radius:8px} .brand b{color:var(--accent)}
+nav a.back{color:var(--accent);font-weight:600;text-decoration:none;font-size:.95rem}
+main{padding:48px 0 64px}
+h1{font-family:Montserrat,sans-serif;color:var(--ink);font-size:clamp(1.8rem,5vw,2.4rem);letter-spacing:-.02em;margin-bottom:10px}
+h2{font-family:Montserrat,sans-serif;color:var(--ink);font-size:1.25rem;margin:34px 0 10px}
+p{margin-bottom:12px} ul{padding-left:22px;margin-bottom:12px} li{margin-bottom:6px}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.9em;background:var(--card);border:1px solid var(--line);border-radius:6px;padding:1px 6px;word-break:break-word;color:var(--ink)}
+strong{color:var(--ink)}
+a.link{color:var(--accent);word-break:break-word}
+footer{border-top:1px solid var(--line);padding:26px 0;color:var(--muted);font-size:.88rem}
+</style>
+</head>
+<body>
+<nav><div class="wrap"><a class="brand" href="/"><img src="/assets/mark.png" alt=""><span><b>C</b> Terminal</span></a><a class="back" href="/">← Back to C Terminal</a></div></nav>
+<main class="wrap">
+<h1>Privacy</h1>
+<p>C Terminal has no servers, no accounts and no analytics. It is two pieces you run yourself: the companion on your
+PC and the app on your phone. They talk to each other directly, inside your own Tailscale network. This page lists
+every place your data goes.</p>
+<h2>On your PC</h2>
+<p><code>~/.config/c-terminal</code> holds your settings (<code>config.json</code>) and a random token (<code>local.token</code>) that only programs on
+the PC itself can read; the Claude Code and Codex hooks use it to reach the companion.</p>
+<p>Your terminal sessions, their scrollback and the list of recent events live <strong>in the companion's memory only</strong>.
+They are never written to disk, and they are gone when the companion stops or the PC restarts.</p>
+<p>The companion asks the Tailscale program on your PC who each connecting device is (<code>tailscale whois</code>), and lets in
+only devices on your own Tailscale account. It does not contact any other service.</p>
+<h2>On your phone</h2>
+<ul>
+<li>The list of computers you added (a name, a Tailscale name or address, a port) and your settings (away mode,
+  which notifications you want, font size).</li>
+<li>Android backup is off for the app, so none of this is copied to Google Drive or to a new phone.</li>
+</ul>
+<p>The app does not store what you type or what your terminals show; it only draws what the PC sends while a session
+is open.</p>
+<p>Permissions: <strong>Internet</strong> (to reach your PC), <strong>Network state</strong> (to reconnect as soon as your signal returns),
+<strong>Notifications</strong>, <strong>Run in the foreground</strong> (a quiet notification that keeps one small connection to each PC open
+so alerts and approvals arrive on time) and <strong>Run at startup</strong> (to reconnect after a reboot).</p>
+<h2>In between</h2>
+<p>All traffic goes from your phone to your PC inside Tailscale, which encrypts it end to end with WireGuard. The
+companion listens only on your PC's Tailscale addresses, never on your home network or the internet. Tailscale's
+own coordination service sees which of your devices exist, as it always does, but not what they send each other.
+See Tailscale's privacy policy: <a class="link" href="https://tailscale.com/privacy-policy" rel="noopener">https://tailscale.com/privacy-policy</a></p>
+<h2>Claude Code and Codex</h2>
+<p>If you connect them (<code>cterm hooks install</code>, Codex's <code>notify</code> setting), they tell the companion when they need
+permission, need you, or finish a turn. That includes the command or file they want to use and their last message,
+which the companion shows on your phone. It goes nowhere else.</p>
+<h2>Contact</h2>
+<p>Questions: <a class="link" href="mailto:cterminal@thewiderlens.info">cterminal@thewiderlens.info</a> · Security issues: see <a class="link" href="https://github.com/TheWiderLensInitiative/c-terminal/blob/main/SECURITY.md" rel="noopener">SECURITY.md</a></p>
+</main>
+<footer><div class="wrap">This page matches <a class="link" href="https://github.com/TheWiderLensInitiative/c-terminal/blob/main/docs/PRIVACY.md">docs/PRIVACY.md</a> in the C Terminal repository. Created by DevIgnite × The Wider Lens Initiative Project.</div></footer>
+</body>
+</html>
